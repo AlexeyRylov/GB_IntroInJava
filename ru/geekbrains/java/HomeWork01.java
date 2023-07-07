@@ -1,5 +1,9 @@
 package ru.geekbrains.java;
 
+import java.util.logging.*;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 public class HomeWork01{
@@ -86,17 +90,21 @@ public class HomeWork01{
 
     static void HW01_EX03() {
         boolean exitFlag = true;
+        Logger logger = Logger.getLogger(HomeWork01.class.getName());
+        LinkedList<String> historyBuffer = new LinkedList<>();
         while(exitFlag){
             System.out.println("Выберите тип операции:");
             System.out.println("1 - Сложение");
             System.out.println("2 - Вычитание");
             System.out.println("3 - Умножение");
             System.out.println("4 - Деление");
+            System.out.println("5 - UnDo");
             System.out.println("0 - Завершение расчета");
             int funcIndex = inputInteger("Введите целое число: ");
             int in1 = 0;
             int in2 = 0;
             int result = 0;
+            boolean fhFirst = true;
 
             switch(funcIndex){
                 case 0:
@@ -106,27 +114,95 @@ public class HomeWork01{
                 case 1:
                     in1 = inputInteger("Введите первое целое число: ");
                     in2 = inputInteger("Введите второе целое число: ");
-                    System.out.printf("Результат: %d\n\n", in1 + in2); 
+                    try{
+                        FileHandler fh = new FileHandler("logAdd.xml");
+                        logger.addHandler(fh);
+                        XMLFormatter xml = new XMLFormatter();
+                        fh.setFormatter(xml);
+                        int calc = in1 + in2;
+                        String res = "in1 + in2 = " + Integer.toString(calc); 
+                        logger.info(res);
+                        historyBuffer.add(res);
+                        System.out.println();
+                    }
+                    catch(IOException ex){
+                        System.out.print("Ошибка логирования. Завершение приложения");
+                    }
                     break;
                 case 2:
                     in1 = inputInteger("Введите первое целое число: ");
                     in2 = inputInteger("Введите второе целое число: ");
-                    System.out.printf("Результат: %d\n\n", in1 - in2); 
+                    try{
+                        FileHandler fh = new FileHandler("logSUB.xml");
+                        logger.addHandler(fh);
+                        XMLFormatter xml = new XMLFormatter();
+                        fh.setFormatter(xml);
+                        int calc = in1 - in2;
+                        String res = "in1 - in2 = " + Integer.toString(calc); 
+                        logger.info(res);
+                        historyBuffer.add(res);
+                        System.out.println();
+                    }
+                    catch(IOException ex){
+                        System.out.print("Ошибка логирования. Завершение приложения");
+                    }
                     break;
                 case 3:
                     in1 = inputInteger("Введите первое целое число: ");
                     in2 = inputInteger("Введите второе целое число: ");
-                    System.out.printf("Результат: %d\n\n", in1 * in2); 
+                    try{
+                        FileHandler fh = new FileHandler("logMUL.xml");
+                        logger.addHandler(fh);
+                        XMLFormatter xml = new XMLFormatter();
+                        fh.setFormatter(xml);
+                        int calc = in1 * in2;
+                        String res = "in1 * in2 = " + Integer.toString(calc); 
+                        logger.info(res);
+                        historyBuffer.add(res);
+                        System.out.println();
+                    }
+                    catch(IOException ex){
+                        System.out.print("Ошибка логирования. Завершение приложения");
+                    }
                     break;
                 case 4:
                     in1 = inputInteger("Введите первое целое число: ");
                     in2 = inputInteger("Введите второе целое число: ");
+                    try{
+                        FileHandler fh = new FileHandler("logDIV3.xml");
+                        logger.addHandler(fh);
+                        XMLFormatter xml = new XMLFormatter();
+                        fh.setFormatter(xml);
+                        if (in2 == 0) {
+                            System.out.println("Увы, но на ноль делить нельзя\n");
+                            break;
+                        }
+                        else {
+                            int calc = in1 / in2;
+                            String res = "in1 / in2 = " + Integer.toString(calc); 
+                            logger.info(res);
+                            historyBuffer.add(res);
+                            System.out.println();
+                        }
+                    }
+                    catch(IOException ex){
+                        System.out.print("Ошибка логирования. Завершение приложения");
+                    }
                     if (in2 == 0) {
                         System.out.println("Увы, но на ноль делить нельзя\n");
                         break;
                     }
                     else {
                         System.out.printf("Результат: %d\n\n", in1 / in2); 
+                    }
+                    break;
+                case 5:
+                    if (historyBuffer.size() >= 2) {
+                        historyBuffer.removeLast();
+                        System.out.printf("Предыдущий расчет: " + historyBuffer.getLast() + "\n\n");
+                    }
+                    else {
+                        System.out.printf("Буфер истории пуст.\n\n");
                     }
                     break;
                 default:
