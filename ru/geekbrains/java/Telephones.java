@@ -32,8 +32,10 @@ public class Telephones {
         studName = personName;
         for (HashMap.Entry<String, List<Person>> person :  hashMap.entrySet()){
             if (person.getKey().equals(studName))
-                System.out.println(person.getValue());
+                System.out.println(person.getValue().toString());
         }
     }
+
+    
 
 }
